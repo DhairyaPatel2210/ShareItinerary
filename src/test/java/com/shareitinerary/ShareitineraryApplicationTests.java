@@ -1,0 +1,13 @@
+package com.shareitinerary;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ShareitineraryApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
