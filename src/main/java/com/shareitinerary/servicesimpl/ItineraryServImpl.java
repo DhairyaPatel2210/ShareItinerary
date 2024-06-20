@@ -21,12 +21,13 @@ public class ItineraryServImpl implements ItineraryService {
     private ConverterFactory converter;
     
     @Override
-    public Response createItinerary(ItineraryDTO itinerary) {
-        Response res = new Response();
+    public Response<ItineraryDTO> createItinerary(ItineraryDTO itinerary) {
+        
         try {
             Itinerary entity = converter.convertToItinerary(itinerary);
-            itineraryRepo.save(entity);
-            res.setMessage("Added Successfully!");
+            entity = itineraryRepo.save(entity);
+            ItineraryDTO savedEntityDTO = converter.convertToItineraryDTO(entity);
+            Response<ItineraryDTO> res = new Response<ItineraryDTO>("Added Successfully!",savedEntityDTO);
             return res;
         } catch (Exception e) {
             throw new DatabaseError(e.getMessage());

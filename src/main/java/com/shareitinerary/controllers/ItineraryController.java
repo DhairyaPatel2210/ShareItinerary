@@ -22,9 +22,9 @@ public class ItineraryController {
     private ItineraryService itinerarService;
 
     @PostMapping("/v1/itineraries")
-    public ResponseEntity<Response> createItinerary(@Valid @RequestBody ItineraryDTO itinerary) {
-        Response res = new Response();
+    public ResponseEntity<Response<ItineraryDTO>> createItinerary(@Valid @RequestBody ItineraryDTO itinerary) {
+        Response<ItineraryDTO> res = new Response<ItineraryDTO>();
         res = itinerarService.createItinerary(itinerary);
-        return new ResponseEntity<Response>(res, HttpStatus.OK);
+        return new ResponseEntity<Response<ItineraryDTO>>(res, HttpStatus.OK);
     }
 }

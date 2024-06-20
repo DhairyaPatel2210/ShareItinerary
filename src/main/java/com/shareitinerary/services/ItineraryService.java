@@ -7,6 +7,6 @@ import com.shareitinerary.dto.Response;
 
 @Component
 public interface ItineraryService {
-    public Response createItinerary(ItineraryDTO itinerary);
+    public Response<ItineraryDTO> createItinerary(ItineraryDTO itinerary);
 }
 

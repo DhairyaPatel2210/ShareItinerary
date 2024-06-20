@@ -30,4 +30,10 @@ public class Itinerary {
     
     @Min(1)
     int travelDays;
+
+    public Itinerary(String name, String transportationMode, int travelDays) {
+        this.name = name;
+        this.transportationMode = transportationMode;
+        this.travelDays = travelDays;
+    }
 }

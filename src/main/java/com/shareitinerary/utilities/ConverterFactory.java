@@ -16,4 +16,8 @@ public class ConverterFactory{
     public Itinerary convertToItinerary(ItineraryDTO dto) {
         return modelMapper.map(dto, Itinerary.class);
     }
+
+    public ItineraryDTO convertToItineraryDTO(Itinerary itinerary) {
+        return modelMapper.map(itinerary, ItineraryDTO.class);   
+    }
 }
