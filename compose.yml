@@ -8,13 +8,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: shareitinerary
+    image: dhairya22/shareitinerary
     ports:
       - 9090:9090
     depends_on:
       - postgres
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shareitinerary
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/shareitinerary
+      POSTGRES_USER: postgres
+      POSTGRES_PASS: 123
