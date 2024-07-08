@@ -12,16 +12,6 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14
       - run:
-          name: Build Spring Boot application
-          command: |
-            ./gradlew build
-            mkdir -p ~/artifacts
-            cp build/libs/*.jar ~/artifacts/app.jar
-      - persist_to_workspace:
-          root: ~/artifacts
-          paths:
-            - app.jar
-      - run:
           name: Build Docker image
           command: |
             docker build -t $DOCKER_USERNAME/shareitinerary:latest .
