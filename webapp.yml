@@ -14,6 +14,9 @@ spec:
       labels:
         app: webapp
     spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
+        cloud.google.com/compute-class: Scale-Out
       imagePullSecrets:
       - name: myregistrykey
       containers:
@@ -48,11 +51,10 @@ kind: Service
 metadata:
   name: webapp-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: webapp
   ports:
     - protocol: TCP
       port: 9090   # port address where service is running
       targetPort: 9090 # to transfer the incoming request to the port
-      nodePort: 30300

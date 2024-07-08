@@ -1,42 +1,62 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:java:.,tool:gradle:
 version: 2.1
+
+orbs:
+  gcp-cli: circleci/gcp-cli@2.4.1
+
 jobs:
-  test-java:
+  build-and-push:
     docker:
       - image: cimg/openjdk:17.0
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.14
       - run:
-          name: Calculate cache key
-          command: |-
-            find . -name 'pom.xml' -o -name 'gradlew*' -o -name '*.gradle*' | \
-                    sort | xargs cat > /tmp/CIRCLECI_CACHE_KEY
-      - restore_cache:
-          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
-      - run:
-          command: ./gradlew check
-      - store_test_results:
-          path: build/test-results
-      - save_cache:
-          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
+          name: Build Spring Boot application
+          command: |
+            ./gradlew build
+            mkdir -p ~/artifacts
+            cp build/libs/*.jar ~/artifacts/app.jar
+      - persist_to_workspace:
+          root: ~/artifacts
           paths:
-            - ~/.gradle/caches
-      - store_artifacts:
-          path: build/reports
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
+            - app.jar
       - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+          name: Build Docker image
+          command: |
+            docker build -t $DOCKER_USERNAME/shareitinerary:latest .
+      - run:
+          name: Authenticate with DockerHub
+          command: |
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - run:
+          name: Push Docker image to DockerHub
+          command: |
+            docker push $DOCKER_USERNAME/shareitinerary:latest
+
+  # deploy-to-gke:
+  #   docker:
+  #     - image: cimg/base:stable
+  #   steps:
+  #     - checkout
+  #     - gcp-cli/install
+  #     - gcp-cli/initialize
+  #     - run:
+  #         name: Deploy to GKE
+  #         command: |
+  #           gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone $GKE_ZONE --project $GCP_PROJECT_ID
+  #           kubectl apply -f k8s/
+
 workflows:
-  build-and-test:
+  version: 2
+  build-and-deploy:
     jobs:
-      - test-java
-    # - deploy:
-    #     requires:
-    #       - test-java
+      - build-and-push:
+          context: dockerhub-creds
+      - deploy-to-gke:
+          requires:
+            - build-and-push
+          context: gcp-creds
+          filters:
+            branches:
+              only: main
