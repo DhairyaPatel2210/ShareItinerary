@@ -18,7 +18,7 @@ RUN ./gradlew clean build -x test
 FROM eclipse-temurin:22
 
 # copying the build to working directory
-COPY ~/project/build/libs/*.jar app.jar
+COPY /project/build/libs/*.jar app.jar
 
 # running the final code
 ENTRYPOINT ["java", "-jar", "app.jar"]
