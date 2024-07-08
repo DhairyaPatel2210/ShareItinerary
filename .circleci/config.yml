@@ -53,10 +53,10 @@ workflows:
     jobs:
       - build-and-push:
           context: dockerhub-creds
-      - deploy-to-gke:
-          requires:
-            - build-and-push
-          context: gcp-creds
-          filters:
-            branches:
-              only: main
+      # - deploy-to-gke:
+      #     requires:
+      #       - build-and-push
+      #     context: gcp-creds
+      #     filters:
+      #       branches:
+      #         only: main
