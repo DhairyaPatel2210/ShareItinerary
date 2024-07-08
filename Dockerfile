@@ -15,10 +15,10 @@ WORKDIR /project
 # executing the gradle build
 RUN ./gradlew clean build -x test 
 
-FROM eclipse-temurin:22
+FROM --platform=$TARGETPLATFORM eclipse-temurin:22
 
 # copying the build to working directory
-COPY /project/build/libs/*.jar app.jar
+COPY --from=build /project/build/libs/*.jar app.jar
 
 # running the final code
 ENTRYPOINT ["java", "-jar", "app.jar"]
