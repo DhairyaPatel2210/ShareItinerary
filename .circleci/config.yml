@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-and-push:
     docker:
-      - image: cimg/base
+      - image: cimg/base:current
     steps:
       - checkout
       - setup_remote_docker:
