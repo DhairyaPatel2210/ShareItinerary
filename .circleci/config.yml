@@ -12,17 +12,14 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14
       - run:
-          name: Build Docker image
-          command: |
-            docker build -t $DOCKER_USERNAME/shareitinerary:latest .
-      - run:
           name: Authenticate with DockerHub
           command: |
             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - run:
-          name: Push Docker image to DockerHub
+          name: Build Docker image and pushing it on DockerHub
           command: |
-            docker push $DOCKER_USERNAME/shareitinerary:latest
+            docker buildx build --platform linux/amd64,linux/arm64 -t dhairya22/shareitinerary:latest --push .
+            
   deploy-to-gke:
     docker:
       - image: cimg/gcp:2024.03.1

@@ -1,6 +1,8 @@
 # importing the required JDK for java version 22
 FROM --platform=$TARGETPLATFORM eclipse-temurin:22 AS build
 
+ENV GRADLE_OPTS='-Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=1g"'
+
 # copying needed code from the current folder to the image
 COPY ./build.gradle /project/
 COPY ./gradlew /project/
@@ -13,7 +15,7 @@ COPY ./src /project/src/
 WORKDIR /project
 
 # executing the gradle build
-RUN ./gradlew clean build -x test 
+RUN ./gradlew clean build -x test --no-daemon --refresh-dependencies
 
 FROM --platform=$TARGETPLATFORM eclipse-temurin:22
 
