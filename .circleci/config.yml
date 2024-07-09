@@ -25,9 +25,8 @@ jobs:
           name: Build Multi-Arch Docker Images and push them on DockerHub
           command: |
             docker build -t dhairya22/shareitinerary:amd64 --platform linux/amd64 .
-            docker build -t dhairya22/shareitinerary:arm64 --platform linux/arm64 .
             docker push dhairya22/shareitinerary:amd64
-            docker push dhairya22/shareitinerary:arm64
+            
       - run:
           name: Make docker manifest and push it on DockerHub 
           command: |
