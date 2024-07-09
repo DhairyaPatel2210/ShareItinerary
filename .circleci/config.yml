@@ -22,9 +22,15 @@ jobs:
           command: |
             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - run:
-          name: Build Docker image and pushing it on DockerHub
+          name: Build Multi-Arch Docker Images and push them on DockerHub
           command: |
-            docker buildx build --platform linux/amd64,linux/arm64 -t dhairya22/shareitinerary:latest --push .
+            docker build -t dhairya22/shareitinerary:amd64 --platform linux/amd64 .
+            docker build -t dhairya22/shareitinerary:arm64 --platform linux/arm64 .
+      - run:
+          name: Make docker manifest and push it on DockerHub 
+          command: |
+            docker manifest create dhairya22/shareitinerary:latest dhairya22/shareitinerary:amd64 dhairya22/shareitinerary:arm64
+            docker manifest push dhairya22/shareitinerary:latest
             
   deploy-to-gke:
     docker:

@@ -15,7 +15,7 @@ COPY ./src /project/src/
 WORKDIR /project
 
 # executing the gradle build
-RUN ./gradlew clean build -x test --no-daemon --refresh-dependencies
+RUN ./gradlew clean build -x test --no-daemon
 
 FROM --platform=$TARGETPLATFORM eclipse-temurin:22
 
