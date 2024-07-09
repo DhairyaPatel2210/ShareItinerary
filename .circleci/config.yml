@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-and-push:
     docker:
-      - image: cimg/base:current
+      - image: cimg/base
     steps:
       - checkout
       - setup_remote_docker:
@@ -23,30 +23,42 @@ jobs:
           name: Push Docker image to DockerHub
           command: |
             docker push $DOCKER_USERNAME/shareitinerary:latest
-
-  # deploy-to-gke:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - gcp-cli/install
-  #     - gcp-cli/initialize
-  #     - run:
-  #         name: Deploy to GKE
-  #         command: |
-  #           gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone $GKE_ZONE --project $GCP_PROJECT_ID
-  #           kubectl apply -f k8s/
-
+  deploy-to-gke:
+    docker:
+      - image: cimg/gcp
+    steps:
+      - checkout
+      - run:
+          name: authorizing with GCP
+          command: |
+            gcloud auth activate-service-account --key-file=<(echo "$GCP_KEY")
+      - run:
+          name: installing required utilities for the gcloud
+          command: |
+            gcloud components install kubectl
+      - run:
+          name: getting connected to cluster
+          command: |
+            gcloud container clusters get-credentials $CLUSTER_NAME --region us-central1 --project shareitinerary-prod
+      - run:
+          name: applying every k8s file to the deployment server
+          command: |
+            kubectl apply -f /k8s
+      
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build-and-push:
           context: dockerhub-creds
-      # - deploy-to-gke:
-      #     requires:
-      #       - build-and-push
-      #     context: gcp-creds
-      #     filters:
-      #       branches:
-      #         only: main
+      - hold:
+          type: approval
+          requires:
+            - build-and-push
+      - deploy-to-gke:
+          requires:
+            - hold
+          context: gcp-creds
+          filters:
+            branches:
+              only: main
