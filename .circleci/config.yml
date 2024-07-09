@@ -10,13 +10,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.14
-      - run:
-          name: Activating buildx for Multi-Arch Build
-          command: |
-            docker buildx create --name mybuilder --use
-            docker buildx inspect --bootstrap
-        
+          version: 20.10.14    
       - run:
           name: Authenticate with DockerHub
           command: |
