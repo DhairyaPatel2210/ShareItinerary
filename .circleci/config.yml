@@ -35,7 +35,7 @@ jobs:
       - run:
           name: installing required utilities for the gcloud
           command: |
-            gcloud components install kubectl
+            sudo apt-get install kubectl
       - run:
           name: getting connected to cluster
           command: |
