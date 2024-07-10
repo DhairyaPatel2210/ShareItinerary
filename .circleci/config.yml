@@ -72,7 +72,7 @@ workflows:
       - hold:
           type: approval
           requires:
-            - build-and-push
+            - push
       - deploy-to-gke:
           requires:
             - hold
