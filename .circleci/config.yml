@@ -6,6 +6,7 @@ orbs:
 jobs: 
   build-and-push:
     docker:
+      - image: cimg/base:current
       - image: eclipse-temurin:22-alpine
     steps:
       - checkout
