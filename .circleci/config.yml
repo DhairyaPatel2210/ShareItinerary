@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Bulding the Jar file
           command: |
-            ./gradlew build
+            ./gradlew clean build
   push:
     docker:
       - image: cimg/base:current
