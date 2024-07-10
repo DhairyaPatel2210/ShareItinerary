@@ -6,7 +6,8 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/openjdk:21.0
+      - image: cimg/base:current
+      - image: eclipse-temurin:22-alpine
     steps:
       - checkout
       - setup_remote_docker:
