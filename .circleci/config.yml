@@ -13,6 +13,11 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14    
       - run:
+          name: Setting up the Java Path
+          command: |
+            export JAVA_HOME=/opt/java/openjdk
+            export PATH=$JAVA_HOME/bin:$PATH    
+      - run:
           name: Bulding the Jar file
           command: |
             ./gradlew clean build
