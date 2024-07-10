@@ -6,8 +6,8 @@ orbs:
 jobs: 
   build-and-push:
     docker:
-      - image: cimg/base:current
       - image: eclipse-temurin:22-alpine
+      - image: cimg/base:current
     steps:
       - checkout
       - setup_remote_docker:
