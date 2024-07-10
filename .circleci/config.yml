@@ -15,6 +15,10 @@ jobs:
           name: Bulding the Jar file
           command: |
             ./gradlew clean build -x test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/libs/*.jar
   push:
     docker:
       - image: cimg/base:current
