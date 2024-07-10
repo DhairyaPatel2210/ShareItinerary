@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/base:current
+      - image: cimg/openjdk:21.0
     steps:
       - checkout
       - setup_remote_docker:
