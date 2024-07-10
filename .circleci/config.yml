@@ -6,12 +6,15 @@ orbs:
 jobs: 
   build-and-push:
     docker:
-      - image: eclipse-temurin:22-alpine
-      - image: cimg/base:current
+      - image: dhairya22/circleci-java22:latest
     steps:
       - checkout
       - setup_remote_docker:
           version: 20.10.14 
+      - run:
+          name: running docker container for java
+          command: |
+            docker run 
       - run:
           name: Bulding the Jar file
           command: |
