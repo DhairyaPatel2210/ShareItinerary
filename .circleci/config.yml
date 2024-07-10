@@ -12,10 +12,6 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14 
       - run:
-          name: running docker container for java
-          command: |
-            docker run 
-      - run:
           name: Bulding the Jar file
           command: |
             ./gradlew clean build -x test   
