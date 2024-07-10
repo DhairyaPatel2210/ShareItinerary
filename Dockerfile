@@ -17,7 +17,6 @@ WORKDIR /project
 # executing the gradle build
 RUN ./gradlew clean build -x test --no-daemon
 
-# starting a new stage
 FROM --platform=$TARGETPLATFORM eclipse-temurin:22
 
 # copying the build to working directory
