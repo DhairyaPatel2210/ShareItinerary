@@ -3,31 +3,18 @@ version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@2.4.1
 
-jobs:
-  build:
+jobs: 
+  build-and-push:
     docker:
       - image: eclipse-temurin:22-alpine
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.14    
+          version: 20.10.14 
       - run:
           name: Bulding the Jar file
           command: |
-            ./gradlew clean build -x test
-      - persist_to_workspace:
-          root: .
-          paths:
-            - build/libs/*.jar
-  push:
-    docker:
-      - image: cimg/base:current
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.14 
-      - attach_workspace:
-          at: .   
+            ./gradlew clean build -x test   
       - run:
           name: Authenticate with DockerHub
           command: |
@@ -69,16 +56,15 @@ jobs:
 workflows:
   version: 2
   build-and-deploy:
-    jobs:
-      - build          
-      - push:
+    jobs:   
+      - build-and-push::
           context: dockerhub-creds
           requires:
             - build
       - hold:
           type: approval
           requires:
-            - push
+            - build-and-push
       - deploy-to-gke:
           requires:
             - hold
