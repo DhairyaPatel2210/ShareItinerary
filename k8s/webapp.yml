@@ -22,6 +22,18 @@ spec:
       containers:
       - name: web-app-container
         image: dhairya22/shareitinerary:latest
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 9090
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
         ports:
         - containerPort: 9090 # where the pod of postgres is running
         env:
@@ -51,7 +63,7 @@ kind: Service
 metadata:
   name: webapp-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: webapp
   ports:
