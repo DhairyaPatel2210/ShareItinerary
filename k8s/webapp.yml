@@ -21,19 +21,7 @@ spec:
       - name: myregistrykey
       containers:
       - name: web-app-container
-        image: dhairya22/shareitinerary:latest
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 9090
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 9090
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        image: dhairya22/shareitinerary:latest    
         ports:
         - containerPort: 9090 # where the pod of postgres is running
         env:
@@ -57,13 +45,19 @@ spec:
             configMapKeyRef:
               name: postgres-config
               key: host
+        # livenessProbe:
+        #   httpGet:
+        #     path: /actuator/health
+        #     port: 9090
+        #   initialDelaySeconds: 120
+        #   periodSeconds: 100
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: webapp-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: webapp
   ports:
