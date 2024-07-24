@@ -41,8 +41,32 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
+	testLogging {
+		events "PASSED", "SKIPPED", "FAILED"
+	}
+}
+
+tasks.register('integrationTest', Test) {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+	testLogging {
+		events "PASSED", "SKIPPED", "FAILED"
+	}
+	testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter(tasks.named('test'))
+	
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('integrationTest')
 }

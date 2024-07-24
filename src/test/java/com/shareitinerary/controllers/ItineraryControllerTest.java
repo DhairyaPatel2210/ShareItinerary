@@ -2,6 +2,8 @@ package com.shareitinerary.controllers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +19,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest()
 @AutoConfigureMockMvc
 @Testcontainers
+@Tag("integration")
 public class ItineraryControllerTest {
 
     @Container
@@ -28,6 +31,7 @@ public class ItineraryControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @DisplayName("Testing /itineraryservice/v1/itineraries with correct input")
     public void testCreateItinerary() throws Exception {
         String itineraryDTO = "{\"name\":\"Test 1 Hi\",\"transportationMode\":\"Hello\",\"travelDays\":7}";
 

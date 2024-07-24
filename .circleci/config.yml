@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@2.4.1
 
-jobs: 
+jobs:  
   build-and-push:
     docker:
       - image: dhairya22/circleci-java22:latest
@@ -12,9 +12,9 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14 
       - run:
-          name: Bulding the Jar file
+          name: Bulding the Jar file with tests
           command: |
-            ./gradlew clean build -x test   
+            ./gradlew clean build
       - run:
           name: Authenticate with DockerHub
           command: |
@@ -32,7 +32,17 @@ jobs:
           command: |
             docker manifest create $DOCKER_USERNAME/shareitinerary:latest $DOCKER_USERNAME/shareitinerary:amd64 $DOCKER_USERNAME/shareitinerary:arm64
             docker manifest push $DOCKER_USERNAME/shareitinerary:latest
-            
+
+  test:
+    docker:
+      - image: dhairya22/circleci-java22:latest
+    steps:
+      - checkout
+      - run:
+          name: Running Integration test
+          command: |
+            ./gradlew integrationTest
+
   deploy-to-gke:
     docker:
       - image: cimg/gcp:2024.03.1
@@ -49,11 +59,15 @@ jobs:
       - run:
           name: getting connected to cluster
           command: |
-            gcloud container clusters get-credentials $CLUSTER_NAME --region us-central1 --project shareitinerary-prod
+            gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION_NAME --project $PROJECT_ID
       - run:
           name: applying every k8s file to the deployment server
           command: |
             kubectl apply -f k8s/
+      - run:
+          name: spinning up the ingress
+          command: |
+            kubectl apply -f gcp-ingress.yml
       
 workflows:
   version: 2
@@ -61,10 +75,11 @@ workflows:
     jobs:   
       - build-and-push:
           context: dockerhub-creds
+      - test
       - hold:
           type: approval
           requires:
-            - build-and-push
+            - test
       - deploy-to-gke:
           requires:
             - hold

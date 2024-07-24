@@ -3,6 +3,8 @@ package com.shareitinerary.servicesimpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +19,7 @@ import com.shareitinerary.repositories.ItineraryRepo;
 import com.shareitinerary.utilities.ConverterFactory;
 
 @ExtendWith(MockitoExtension.class)
+@Tag("unit")
 public class ItineraryServImplTest {
     
     @Mock
@@ -29,6 +32,7 @@ public class ItineraryServImplTest {
     private ItineraryServImpl itineraryServImpl;
 
     @Test
+    @DisplayName("Unit test for Itinerary Service Impl")
     public void testCreateItinerary() {
         Itinerary itinerary = new Itinerary(10L, "Trip1", "Car", 10);
         ItineraryDTO itineraryDTO = new ItineraryDTO("Trip1", "Car", 10);
@@ -45,6 +49,7 @@ public class ItineraryServImplTest {
     }
 
     @Test
+    @DisplayName("testing createItinerary method in Itinerary Service Impl class while generating Database error")
     public void testCreateItineraryError() {
         ItineraryDTO itineraryDTO = new ItineraryDTO("Trip1", "Car", 10);
         when(itineraryServImpl.createItinerary(itineraryDTO)).thenThrow(new RuntimeException("Database Error"));
@@ -55,6 +60,4 @@ public class ItineraryServImplTest {
             assertEquals(e.getMessage(), "Database Error");
         }
     }
-    
-
 }

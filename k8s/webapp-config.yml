@@ -1,0 +1,11 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: webapp-config
+spec:
+  healthCheck:
+    timeoutSec: 100
+    checkIntervalSec: 120
+    type: HTTP
+    requestPath: /actuator/health
+    port: 9090
