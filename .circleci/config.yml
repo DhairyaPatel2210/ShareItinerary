@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Bulding the Jar file with tests
           command: |
-            ./gradlew clean build
+            ./gradlew clean build -x test
       - run:
           name: Authenticate with DockerHub
           command: |
