@@ -44,11 +44,8 @@ jobs:
     executor: integration-test-executor
     steps:
       - checkout
-      - gradle/with-cache:
-          steps:
-            - name: Running Integration test
-              command: |
-                ./gradlew integrationTest
+      - gradle/run:
+          command: "gradle integrationTest"
 
   deploy-to-gke:
     docker:
