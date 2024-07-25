@@ -34,8 +34,9 @@ jobs:
             docker manifest push $DOCKER_USERNAME/shareitinerary:latest
 
   test:
-    docker:
-      - image: dhairya22/circleci-java22:latest
+    machine:
+      image: ubuntu-2004:2024.04.4
+      docker_layer_caching: true 
     steps:
       - checkout
       - run:
@@ -72,10 +73,12 @@ jobs:
 workflows:
   version: 2
   build-and-deploy:
-    jobs:   
+    jobs:
+      - test  
       - build-and-push:
           context: dockerhub-creds
-      - test
+          requires:
+            - test   
       - hold:
           type: approval
           requires:
