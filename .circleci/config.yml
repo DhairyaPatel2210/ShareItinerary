@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   gcp-cli: circleci/gcp-cli@2.4.1
-  gradle: circleci/gradle@3.0.0
 
 executors:
   integration-test-executor: 
@@ -44,8 +43,10 @@ jobs:
     executor: integration-test-executor
     steps:
       - checkout
-      - gradle/run:
-          command: "gradle integrationTest"
+      - run:
+          name: Running Integration tests
+          command: |
+            ./gradlew integrationTest
 
   deploy-to-gke:
     docker:
