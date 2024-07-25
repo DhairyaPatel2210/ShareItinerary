@@ -15,10 +15,12 @@ jobs:
       - image: cimg/openjdk:21.0.2
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.14 
       - run:
           name: Bulding the Jar file with tests
           command: |
-            ./gradlew clean build -x test
+            ./gradlew clean build
       - run:
           name: Authenticate with DockerHub
           command: |
