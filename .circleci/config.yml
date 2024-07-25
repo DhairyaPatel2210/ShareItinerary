@@ -2,6 +2,13 @@ version: 2.1
 
 orbs:
   gcp-cli: circleci/gcp-cli@2.4.1
+  gradle: circleci/gradle@3.0.0
+
+executors:
+  integration-test-executor: 
+    machine:
+      image: ubuntu-2204:2024.04.4
+      docker_layer_caching: true
 
 jobs:  
   build-and-push:
@@ -34,15 +41,14 @@ jobs:
             docker manifest push $DOCKER_USERNAME/shareitinerary:latest
 
   test:
-    machine:
-      image: ubuntu-2004:2024.04.4
-      docker_layer_caching: true 
+    executor: integration-test-executor
     steps:
       - checkout
-      - run:
-          name: Running Integration test
-          command: |
-            ./gradlew integrationTest
+      - gradle/with-cache:
+          steps:
+            - name: Running Integration test
+              command: |
+                ./gradlew integrationTest
 
   deploy-to-gke:
     docker:
@@ -82,7 +88,7 @@ workflows:
       - hold:
           type: approval
           requires:
-            - test
+            - build-and-push
       - deploy-to-gke:
           requires:
             - hold
