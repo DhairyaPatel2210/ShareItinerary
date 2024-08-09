@@ -1,4 +1,6 @@
-![ShareItinerary_Arch (1).jpg](ShareItinerary%202c5cae674c7f4f2fb0364aa0a098a1a0/ShareItinerary_Arch_(1).jpg)
+![ShareItinerary Architecture](/documentation/images/ShareItinerary_Arch.jpg)
+
+
 
 **End Users (Mobile Devices and Desktop):** 
 
@@ -29,7 +31,7 @@ Project uses spring boot actuator module to test the health of the backend servi
 
 We require Ingress controller, to transfer incoming requests to appropriate services based upon the rules defined inside the ingress object. GCP has its own Ingress controller, which integrates well with GKE and other GCP services.
 
-![Untitled](ShareItinerary%202c5cae674c7f4f2fb0364aa0a098a1a0/Untitled.png)
+![GKE Ingress Controller](/documentation/images/Ingress_Controller.png)
 
 - **Design Decision:** There are multiple Ingress Controller in the market such as NgINX, Contour, Istio Ingress, etc. GCP also provide support to make use of custom Ingress controller, but the GCP’s own Ingress controller, which is being created on the creation of Ingress object without further configuration ease the process of using it. Additionally, the auto creation of load balancer and all the dashboards are integrated in GCP for better debugging.
 
