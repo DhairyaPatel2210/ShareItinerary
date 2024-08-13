@@ -19,38 +19,38 @@ Requests made from the end users will be routed to DNS service, and eventually i
 
 **GCP Load Balancer:**
 
-HTTP(S) type of load balancer is created by GCP upon the creation of Ingress object in kubernetes cluster and which is external load balancer. An external Application Load Balancer acts as a proxy between clients and application. 
+An HTTP(S) type load balancer is automatically created by GCP when an Ingress object is defined in the Kubernetes cluster. This external Application Load Balancer acts as a proxy between clients and the application.
 
-The project have specific configurations for the load balancer. Such as, load balancers make health check requests periodically to maintain the information about the services to which the load balancer will transfer the requests. To configure health checks, backend-config object is being created and will help load balancer to access the required endpoint in the backend service to find the health of the service. 
+The project has specific configurations for the load balancer, such as periodic health checks to monitor the status of backend services. To configure these health checks, a `backend-config` object is created, allowing the load balancer to access the appropriate endpoint in the backend service to determine its health.
 
-Project uses spring boot actuator module to test the health of the backend services.
+The project uses the Spring Boot Actuator module to check the health of the backend services.
 
-- **Design Decision:** Using DNS I want to route the requests to load balancer IP. This use case is fulfilled by external load balancer which distributes HTTP and HTTPS traffic to backends hosted on a variety of Google Cloud platforms such as GKE. GCP provides full support for GKE applications, which further made the choice strong.
+- **Design Decision:** I use DNS to route requests to the load balancer's IP. This requirement is met by an external load balancer, which distributes HTTP and HTTPS traffic to backends hosted on various Google Cloud platforms, such as GKE. GCP's full support for GKE applications further solidified this choice.
 
 **GCP Ingress Controller:**
 
-We require Ingress controller, to transfer incoming requests to appropriate services based upon the rules defined inside the ingress object. GCP has its own Ingress controller, which integrates well with GKE and other GCP services.
+An Ingress controller is necessary to route incoming requests to the appropriate services based on rules defined within the Ingress object. GCP provides its own Ingress controller, which integrates seamlessly with GKE and other GCP services.
 
 ![GKE Ingress Controller](/documentation/images/Ingress_Controller.png)
 
-- **Design Decision:** There are multiple Ingress Controller in the market such as NgINX, Contour, Istio Ingress, etc. GCP also provide support to make use of custom Ingress controller, but the GCP’s own Ingress controller, which is being created on the creation of Ingress object without further configuration ease the process of using it. Additionally, the auto creation of load balancer and all the dashboards are integrated in GCP for better debugging.
+- **Design Decision:** There are multiple Ingress controllers available, such as NGINX, Contour, and Istio Ingress. While GCP also supports custom Ingress controllers, I chose GCP's native Ingress controller because it is automatically created with the Ingress object, simplifying the configuration process. Additionally, the auto-creation of the load balancer and integrated dashboards in GCP enhance debugging capabilities.
 
 **Ingress Object:**
 
-Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is managed by rules defined in the Ingress resource.
 
-Ingress controller is required In-order to make ingress object work. So, for this project, creation of Ingress object tiggers use of GKE Ingress controller. And, it also start load balancers, to handle the incoming requests coming to the system.
+An Ingress controller is required to make the Ingress object function. In this project, creating an Ingress object triggers the use of the GKE Ingress controller, which also initiates the load balancers to handle incoming requests.
 
-- **Design Decision:** Normally, if users need to access multiple services deployed in k8s cluster, we have to expose each one individually to the outside world. This might mean setting up separate IP addresses or load balancers for each service, which can be complex and costly. As a solution to this Ingress acts as a single entry point for all the traffic coming into your Kubernetes cluster. It knows how to route requests to the right service based on the URL path or other rules you define.
+- **Design Decision:** Typically, to access multiple services deployed in a Kubernetes cluster, each service would need to be exposed individually, which could involve setting up separate IP addresses or load balancers. This can be complex and costly. Ingress provides a solution by acting as a single entry point for all traffic coming into the Kubernetes cluster. It routes requests to the correct service based on the URL path or other rules.
 
 **Service (SVC):**
 
-In Kubernetes, a Service is a method for exposing a network application that is running as one or more Pods in your cluster. ShareItinerary employs NodePort service. Which means, it Exposes the Service on each Node's IP at a static port. So, the ingress can transfer requests to these ports. 
+In Kubernetes, a Service is a method for exposing a network application running as one or more Pods in your cluster. ShareItinerary uses a NodePort service, which exposes the Service on each Node's IP at a static port, allowing the Ingress to route requests to these ports.
 
 **Deployment:**
 
-A "deployment" is like a manager that tells Kubernetes how many pods you need and how they should be updated. For example, if you want your website to be running on 5 different servers at the same time, the deployment makes sure there are always 5 pods running. If one pod fails, the deployment notices and starts a new one to replace it. If you need to update your website with new features, the deployment ensures the old version is replaced with the new version smoothly.
+A "Deployment" in Kubernetes is like a manager that ensures the desired number of Pods are running and handles updates. For example, if you want your website to run on five different servers simultaneously, the Deployment ensures there are always five Pods running. If one Pod fails, the Deployment replaces it with a new one. When updating your website, the Deployment facilitates a smooth transition from the old version to the new one.
 
 **Pods:**
 
-Think of a "pod" like a box that holds one or more of these little versions of your website (or any application). Inside this pod, there's everything your website needs to run, like the code, settings, and any tools it uses. A pod is the smallest unit in Kubernetes, and it usually contains one container (which you can think of as a small, lightweight virtual machine) but can have more if needed.
+A "Pod" is the smallest deployable unit in Kubernetes and usually contains one container (similar to a lightweight virtual machine). Inside this Pod are all the necessary components for your application, such as code, settings, and tools. Although a Pod typically contains one container, it can hold more if needed.
