@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16.3-alpine
+    ports: 
+      - 5050:5432
+    environment:
+      POSTGRES_DB : shareitinerary
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+  app:
+    image: dhairya22/shareitinerary
+    ports:
+      - 9090:9090
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/shareitinerary
+      POSTGRES_USER: postgres
+      POSTGRES_PASS: 123gi
