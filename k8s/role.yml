@@ -1,9 +1,0 @@
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  namespace: default
-  name: access-services-endpoints
-rules:
-- apiGroups: [""]
-  resources: ["services", "endpoints"]
-  verbs: ["get", "list", "watch"]

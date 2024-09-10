@@ -66,13 +66,18 @@ jobs:
           command: |
             gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION_NAME --project $PROJECT_ID
       - run:
+          name: creating service accounts and updating their permissions
+          command: |
+            kubectl apply -f gcp/role.yml 
+            kubectl apply -f gcp/role-binding.yml
+      - run:
           name: applying every k8s file to the deployment server
           command: |
             kubectl apply -f k8s/
       - run:
           name: spinning up the ingress
           command: |
-            kubectl apply -f gcp-ingress.yml
+            kubectl apply -f gcp/gcp-ingress.yml
       
 workflows:
   version: 2
