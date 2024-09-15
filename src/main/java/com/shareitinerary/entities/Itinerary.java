@@ -1,11 +1,17 @@
 package com.shareitinerary.entities;
 
+import java.util.List;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.validation.constraints.Min;
+import jakarta.persistence.OneToMany;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,26 +20,21 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Transactional
 @Entity
 public class Itinerary {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "itinerary_generator")
-    @SequenceGenerator(name = "itinerary_generator", sequenceName = "itinerary_seq", allocationSize = 1)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     
-    @NotEmpty
-    String name;
+    @NotEmpty(message = "Itinerary name can't be empty")
+    private String name;
 
-    @NotEmpty
-    String transportationMode;
-    
-    @Min(1)
-    int travelDays;
+    @NotEmpty(message = "Itinerary summary can't be empty")
+    private String summary;
 
-    public Itinerary(String name, String transportationMode, int travelDays) {
-        this.name = name;
-        this.transportationMode = transportationMode;
-        this.travelDays = travelDays;
-    }
+    @OneToMany(mappedBy = "itinerary", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    List<Day> days;
 }

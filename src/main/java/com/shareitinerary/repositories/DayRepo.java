@@ -5,8 +5,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.shareitinerary.entities.Itinerary;
+import com.shareitinerary.entities.Day;
 
 @Repository
-public interface ItineraryRepo extends JpaRepository<Itinerary, UUID> {
+public interface DayRepo extends JpaRepository<Day, UUID>{
+    
 }

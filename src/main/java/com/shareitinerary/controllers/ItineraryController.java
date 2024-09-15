@@ -19,12 +19,12 @@ import jakarta.validation.Valid;
 public class ItineraryController {
 
     @Autowired
-    private ItineraryService itinerarService;
+    private ItineraryService itineraryService;
 
     @PostMapping("/v1/itineraries")
     public ResponseEntity<Response<ItineraryDTO>> createItinerary(@Valid @RequestBody ItineraryDTO itinerary) {
         Response<ItineraryDTO> res = new Response<ItineraryDTO>();
-        res = itinerarService.createItinerary(itinerary);
+        res = itineraryService.createItinerary(itinerary);
         return new ResponseEntity<Response<ItineraryDTO>>(res, HttpStatus.OK);
     }
 }
