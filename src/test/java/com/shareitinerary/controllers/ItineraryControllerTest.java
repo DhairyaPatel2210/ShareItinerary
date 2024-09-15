@@ -33,7 +33,33 @@ public class ItineraryControllerTest {
     @Test
     @DisplayName("Testing /itineraryservice/v1/itineraries with correct input")
     public void testCreateItinerary() throws Exception {
-        String itineraryDTO = "{\"name\":\"Test 1 Hi\",\"transportationMode\":\"Hello\",\"travelDays\":7}";
+        String itineraryDTO = "{\n" +
+                            "    \"name\": \"Dubai\",\n" +
+                            "    \"summary\" : \"Visited Dubai\",\n" +
+                            "    \"day_count\" : 1,\n" +
+                            "    \"days\" : [\n" +
+                            "        {\n" +
+                            "            \"day_no\" : 1,\n" +
+                            "            \"date\": \"2024-09-14\",\n" +
+                            "            \"activities\" : [\n" +
+                            "                {\n" +
+                            "                    \"title\" : \"Dubai Mall Visit\",\n" +
+                            "                    \"images\" : [\n" +
+                            "                        {\n" +
+                            "                            \"link\" : \"https://bda-project.s3.us-west-1.amazonaws.com/image_temp.jpg\"\n" +
+                            "                        }\n" +
+                            "                    ],\n" +
+                            "                    \"description\" : \"There were 40 international shops inside Dubai Mall\",\n" +
+                            "                    \"location\" : {\n" +
+                            "                        \"name\" : \"Dubai Mall\",\n" +
+                            "                        \"latitude\" : 25.199514,\n" +
+                            "                        \"longitude\" : 55.277397\n" +
+                            "                    }\n" +
+                            "                }\n" +
+                            "            ]\n" +
+                            "        }\n" +
+                            "    ]\n" +
+                            "}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/itineraryservice/v1/itineraries")
                 .content(itineraryDTO)
