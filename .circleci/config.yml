@@ -91,7 +91,7 @@ workflows:
       - hold:
           type: approval
           requires:
-            - build-and-push
+            - test
       - deploy-to-gke:
           requires:
             - hold
