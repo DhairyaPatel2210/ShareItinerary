@@ -1,3 +1,5 @@
+# local environment doesn't require webapp-config, this file is GCP specific
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,39 +18,39 @@ spec:
     spec:
       serviceAccountName: webapp-service-account
       imagePullSecrets:
-      - name: myregistrykey
+        - name: myregistrykey
       containers:
-      - name: web-app-container
-        image: dhairya22/shareitinerary:latest    
-        ports:
-        - containerPort: 9090 # where the pod of postgres is running
-        env:
-        - name: DB_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: postgres-config
-              key: db
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: DB_USER
-        - name: POSTGRES_PASS
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: DB_PASS
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: postgres-config
-              key: host
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 9090
-          initialDelaySeconds: 120
-          periodSeconds: 100
+        - name: web-app-container
+          image: dhairya22/shareitinerary:latest
+          ports:
+            - containerPort: 9090 # where the pod of postgres is running
+          env:
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: db
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: DB_USER
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: host
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: 120
+            periodSeconds: 100
 ---
 apiVersion: v1
 kind: Service
@@ -62,5 +64,5 @@ spec:
     app: webapp
   ports:
     - protocol: TCP
-      port: 9090   # port address where service is running
+      port: 9090 # port address where service is running
       targetPort: 9090 # to transfer the incoming request to the port
