@@ -4,19 +4,19 @@ orbs:
   gcp-cli: circleci/gcp-cli@2.4.1
 
 executors:
-  integration-test-executor: 
+  integration-test-executor:
     machine:
       image: ubuntu-2204:2024.04.4
       docker_layer_caching: true
 
-jobs:  
+jobs:
   build-and-push:
     docker:
       - image: cimg/openjdk:21.0.2
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.14 
+          version: 20.10.14
       - run:
           name: Bulding the Jar file with tests
           command: |
@@ -32,9 +32,9 @@ jobs:
             docker build -t $DOCKER_USERNAME/shareitinerary:arm64 --platform linux/arm64 .
             docker push $DOCKER_USERNAME/shareitinerary:amd64
             docker push $DOCKER_USERNAME/shareitinerary:arm64
-            
+
       - run:
-          name: Make docker manifest and push it on DockerHub 
+          name: Make docker manifest and push it on DockerHub
           command: |
             docker manifest create $DOCKER_USERNAME/shareitinerary:latest $DOCKER_USERNAME/shareitinerary:amd64 $DOCKER_USERNAME/shareitinerary:arm64
             docker manifest push $DOCKER_USERNAME/shareitinerary:latest
@@ -66,11 +66,6 @@ jobs:
           command: |
             gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION_NAME --project $PROJECT_ID
       - run:
-          name: creating service accounts and updating their permissions
-          command: |
-            kubectl apply -f gcp/role.yml 
-            kubectl apply -f gcp/role-binding.yml
-      - run:
           name: applying every k8s file to the deployment server
           command: |
             kubectl apply -f k8s/
@@ -78,13 +73,13 @@ jobs:
           name: spinning up the ingress
           command: |
             kubectl apply -f gcp/gcp-ingress.yml
-      
+
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build-and-push:
-          context: dockerhub-creds  
+          context: dockerhub-creds
       - test:
           requires:
             - build-and-push
