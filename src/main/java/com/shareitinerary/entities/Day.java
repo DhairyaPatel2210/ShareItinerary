@@ -19,9 +19,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -46,5 +48,10 @@ public class Day {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="itinerary_id")
     @JsonBackReference
-    private Itinerary itinerary;   
+    private Itinerary itinerary;
+    
+    public Day(Date date, int day_no) {
+        this.date = date;
+        this.day_no = day_no;
+    }
 }

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import com.shareitinerary.entities.Itinerary;
 
 @Repository
-public interface ItineraryRepo extends JpaRepository<Itinerary, UUID> {
+public interface ItineraryRepository extends JpaRepository<Itinerary, UUID> {
 }

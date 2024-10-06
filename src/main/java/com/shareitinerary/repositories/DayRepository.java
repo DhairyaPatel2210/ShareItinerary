@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.shareitinerary.entities.Day;
 
 @Repository
-public interface DayRepo extends JpaRepository<Day, UUID>{
-    
+public interface DayRepository extends JpaRepository<Day, UUID> {
+
 }

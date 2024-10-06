@@ -15,9 +15,11 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -33,7 +35,6 @@ public class Location {
     @DecimalMax(value = "90.0", inclusive = true, message = "Latitude must be less than or equal to 90")
     private double longitude;
 
-
     @NotNull(message = "Longitude cannot be null")
     @DecimalMin(value = "-180.0", inclusive = true, message = "Longitude must be greater than or equal to -180")
     @DecimalMax(value = "180.0", inclusive = true, message = "Longitude must be less than or equal to 180")
@@ -46,4 +47,10 @@ public class Location {
     @JoinColumn(name = "activity_id", referencedColumnName = "id")
     @JsonBackReference("activity-location")
     private Activity activity;
+
+    public Location(double longitude, double latitude, String name) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.name = name;
+    }
 }

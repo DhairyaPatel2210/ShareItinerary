@@ -9,13 +9,15 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DaysDTO {
+@Builder
+public class DayDto {
     
     @Positive(message = "Day Number Must be greater than 0")
     int day_no;
@@ -26,5 +28,5 @@ public class DaysDTO {
 
     @NotNull(message = "Activities in day can't be null")
     @Valid
-    List<ActivitiyDTO> activities;
+    List<ActivityDto> activities;
 }

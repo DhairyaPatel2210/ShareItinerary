@@ -14,13 +14,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Transactional
 @Entity
 public class Itinerary {
 
@@ -37,4 +38,9 @@ public class Itinerary {
     @OneToMany(mappedBy = "itinerary", cascade = CascadeType.ALL)
     @JsonManagedReference
     List<Day> days;
+
+    public Itinerary(String name, String summary) {
+        this.name = name;
+        this.summary = summary;
+    }
 }

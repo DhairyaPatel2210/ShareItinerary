@@ -19,9 +19,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,4 +52,10 @@ public class Activity {
     @JoinColumn(name = "day_id")
     @JsonBackReference
     private Day day;
+
+    public Activity(String title, String description) {
+        this.title = title;
+        this.description = description;
+        
+    }
 }

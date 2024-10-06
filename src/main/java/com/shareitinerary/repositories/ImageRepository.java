@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.shareitinerary.entities.Image;
 
-public interface ImageRepo extends JpaRepository<Image, UUID>{
-    
+public interface ImageRepository extends JpaRepository<Image, UUID> {
+
 }

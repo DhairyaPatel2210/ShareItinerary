@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ItineraryDTO {
+public class ItineraryDto {
 
     @NotBlank (message = "Itinerary Name can not be Null")
     String name;
@@ -28,6 +28,6 @@ public class ItineraryDTO {
 
     @NotNull(message = "Itinerary should have atlease one day")
     @Valid
-    List<DaysDTO> days;
+    List<DayDto> days;
 }
 

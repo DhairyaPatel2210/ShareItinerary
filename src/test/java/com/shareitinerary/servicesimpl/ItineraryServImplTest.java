@@ -20,7 +20,7 @@ import com.shareitinerary.dto.*;
 import com.shareitinerary.entities.*;
 import com.shareitinerary.exceptions.DatabaseError;
 import com.shareitinerary.repositories.ItineraryRepo;
-import com.shareitinerary.utilities.ConverterFactory;
+import com.shareitinerary.utilities.Factory;
 
 @ExtendWith(MockitoExtension.class)
 public class ItineraryServImplTest {
@@ -29,26 +29,27 @@ public class ItineraryServImplTest {
     private ItineraryRepo itineraryRepo;
 
     @Mock
-    private ConverterFactory converter;
+    private Factory converter;
 
     @InjectMocks
     private ItineraryServImpl itineraryServImpl;
 
-    private ItineraryDTO itineraryDTO;
+    private ItineraryDto itineraryDTO;
     private Itinerary itinerary;
 
     @BeforeEach
     void setUp() {
         // Set up test data
-        LocationDTO locationDTO = new LocationDTO("Test Location", 40.7128, -74.0060);
-        ImageDTO imageDTO = new ImageDTO("https://example.s3.amazonaws.com/image.jpg");
-        ActivitiyDTO activityDTO = new ActivitiyDTO("Test Activity", List.of(imageDTO), "Test Description", locationDTO);
-        DaysDTO daysDTO = new DaysDTO(1, Date.valueOf("2024-09-15"), List.of(activityDTO));
-        itineraryDTO = new ItineraryDTO("Test Itinerary", "Test Summary", 1, List.of(daysDTO));
+        LocationDto locationDTO = new LocationDto("Test Location", 40.7128, -74.0060);
+        ImageDto imageDTO = new ImageDto("https://example.s3.amazonaws.com/image.jpg");
+        ActivityDto activityDTO = new ActivityDto("Test Activity", List.of(imageDTO), "Test Description", locationDTO);
+        DayDto daysDTO = new DayDto(1, Date.valueOf("2024-09-15"), List.of(activityDTO));
+        itineraryDTO = new ItineraryDto("Test Itinerary", "Test Summary", 1, List.of(daysDTO));
 
         Location location = new Location(UUID.randomUUID(), -74.0060, 40.7128, "Test Location", null);
         Image image = new Image(UUID.randomUUID(), "https://example.s3.amazonaws.com/image.jpg", null);
-        Activity activity = new Activity(UUID.randomUUID(), "Test Activity", "Test Description", location, List.of(image), null);
+        Activity activity = new Activity(UUID.randomUUID(), "Test Activity", "Test Description", location,
+                List.of(image), null);
         Day day = new Day(UUID.randomUUID(), 1, Date.valueOf("2024-09-15"), List.of(activity), null);
         itinerary = new Itinerary(UUID.randomUUID(), "Test Itinerary", "Test Summary", List.of(day));
     }
@@ -60,11 +61,11 @@ public class ItineraryServImplTest {
         when(itineraryRepo.save(itinerary)).thenReturn(itinerary);
         when(converter.convertToItineraryDTO(itinerary)).thenReturn(itineraryDTO);
 
-        Response<ItineraryDTO> response = itineraryServImpl.createItinerary(itineraryDTO);
+        Response<ItineraryDto> response = itineraryServImpl.createItinerary(itineraryDTO);
 
         assertNotNull(response);
         assertEquals("Added Successfully!", response.getMessage());
-        assertEquals(ItineraryDTO.class, response.getObject().getClass());
+        assertEquals(ItineraryDto.class, response.getObject().getClass());
         assertEquals("Test Itinerary", response.getObject().getName());
         assertEquals("Test Summary", response.getObject().getSummary());
         assertEquals(1, response.getObject().getDay_count());
@@ -93,7 +94,7 @@ public class ItineraryServImplTest {
         when(itineraryRepo.save(itinerary)).thenReturn(itinerary);
         when(converter.convertToItineraryDTO(itinerary)).thenReturn(itineraryDTO);
 
-        Response<ItineraryDTO> response = itineraryServImpl.createItinerary(itineraryDTO);
+        Response<ItineraryDto> response = itineraryServImpl.createItinerary(itineraryDTO);
 
         assertNotNull(response);
         assertEquals(0, response.getObject().getDay_count());
@@ -102,8 +103,8 @@ public class ItineraryServImplTest {
     @Test
     @DisplayName("Test createItinerary with invalid location coordinates")
     void testCreateItineraryInvalidLocation() {
-        LocationDTO invalidLocation = new LocationDTO("Invalid", 91.0, 181.0);
-        ActivitiyDTO activityDTO = itineraryDTO.getDays().get(0).getActivities().get(0);
+        LocationDto invalidLocation = new LocationDto("Invalid", 91.0, 181.0);
+        ActivityDto activityDTO = itineraryDTO.getDays().get(0).getActivities().get(0);
         activityDTO.setLocation(invalidLocation);
 
         when(converter.convertToItinerary(itineraryDTO)).thenThrow(new IllegalArgumentException("Invalid coordinates"));

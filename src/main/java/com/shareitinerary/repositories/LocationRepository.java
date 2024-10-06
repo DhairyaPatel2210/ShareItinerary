@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.shareitinerary.entities.Activity;
+import com.shareitinerary.entities.Location;
 
-public interface ActivityRepo extends JpaRepository<Activity, UUID>{
+public interface LocationRepository extends JpaRepository<Location, UUID> {
 }
